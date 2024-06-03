@@ -12,9 +12,9 @@ import (
 )
 
 type Item struct{
-	ID string `json:id`
-	Name string `json:name`
-	Price float64 `json:price`
+	ID string `json:"id"`
+	Name string `json:"name"`
+	Price float64 `json:"price"`
 }
 var (
 	items=[]Item{}
@@ -52,5 +52,37 @@ func createItems(w http.ResponseWriter,r *http.Request){
 	w.Header().Set("Content-Type","application/json")
 	json.NewEncoder(w).Encode(item)
 
+}
+func updateItem(w http.ResponseWriter,r *http.Request){
+	params:=mux.Vars(r)
+	var updatedItem Item
+	json.NewDecoder(r.Body).Decode(&updatedItem)
+	itemMux.Lock()
+	defer itemMux.Unlock()
+	for i ,item:=range items{
+		if item.ID==params["id"]{
+			items[i]=updatedItem
+			break 
+		}
+
+	}
+	w.Header().Set("Content-Type","application/josn")
+	json.NewEncoder(w).Encode(updatedItem)
+}
+func deleteItem(w http.ResponseWriter,r *http.Request){
+  params:=mux.Vars(r)
+  itemMux.Lock()
+  defer itemMux.Unlock()
+
+  for i,item:=range items{
+	if item.ID==params["id"]{
+		items=append(items[:1],items[i+1:]...)
+		break 
+
+	}
+  }
+  w.Header().Set("Content-Type","application/json")
+   json.NewEncoder(w).Encode(items)
+	
 }
 
