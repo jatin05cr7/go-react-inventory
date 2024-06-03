@@ -43,6 +43,7 @@ func getItems(w http.ResponseWriter,r *http.Request){
 	defer itemMux.Unlock()
 	json.NewEncoder	(w).Encode(items)
 }
+
 func createItems(w http.ResponseWriter,r *http.Request){
 	var item Item
 	json.NewDecoder(r.Body).Decode(&item)
