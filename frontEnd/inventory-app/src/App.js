@@ -16,11 +16,11 @@ function App() {
     setItems(response.data)
     
   }
-  const handleInputChange = () => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target
     setNewItem({ ...newItem, [name]: value })
   }
-  const handleEditing = async () => {
+  const handleEditing = async (e) => {
     e.preventDefault();
     axios.post("http://localhost:8080/api/items", newItem)
     fetchItems();
@@ -38,7 +38,15 @@ function App() {
     setCurrentItem({ id: '', name: '', price: '' })
     
   }
-  const deleteItems = async () => {
+
+  const addItem = async (e) => { 
+    e.preventDefault()
+    await axios.post("http://localhost:8080/api/items", newItem)
+    fetchItems()
+    setNewItem({id:'',name:'',price:''})
+  }
+
+  const deleteItems = async (id) => {
     await axios.delete(`/http://localhost:8080/api/items/${id}`,)
     
   }
@@ -48,14 +56,25 @@ function App() {
     {editing ? (<form onSubmit={updateItem}>
       <h2>Edit Item</h2>
       <label>ID</label>
-      <input type="text" name="id" value={curremtItem.id} onChange={handleEditing} readOnly/>
-    
-    
-    
-  
+      <input type="text" name="id" value={currentItem.id} onChange={handleEditing} readOnly />
+      <label>Name</label>
+      <input type="text" name="name" value={currentItem.name} onChange={handleEditing} />
+      <label>Price</label>
+      <input type="text" name="price" value={currentItem.price} onChange={handleEditing} />
+      <button type="submit">Update Item</button>
+      <button onClick={()=>(setEditing(false))}>Cancel</button>
+    </form>) : (<form onSubmit={addItem}>
+        <h2>Add Item</h2>
+        <label>ID</label>
+        <input type="text" name="id" value={newItem.id} onChange={handleInputChange} />
+        <label>Name</label>
+        <input type="text" name="name" value={newItem.name} onChange={handleInputChange} />
+        <label>Price</label>
+        <input type="text" name="price" value={newItem.price} onChange={handleInputChange} />
 
+        
 
-    </form>):(<form></form>)}
+    </form>)}
   </div>)
 
 }
