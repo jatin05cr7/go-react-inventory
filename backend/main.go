@@ -41,12 +41,13 @@ func getItems(w http.ResponseWriter,r *http.Request){
 	w.Header().Set("Content-Type","application/json")
 	itemMux.Lock()
 	defer itemMux.Unlock()
-	json.NewEncoder	(w).Encode(items)
+	json.NewEncoder(w).Encode(items)
 }
 
 func createItems(w http.ResponseWriter,r *http.Request){
 	var item Item
 	json.NewDecoder(r.Body).Decode(&item)
+	itemMux.Lock()
 	defer itemMux.Unlock()
     items=append(items,item)
 	w.Header().Set("Content-Type","application/json")

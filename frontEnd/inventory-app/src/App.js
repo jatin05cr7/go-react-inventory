@@ -71,10 +71,20 @@ function App() {
         <input type="text" name="name" value={newItem.name} onChange={handleInputChange} />
         <label>Price</label>
         <input type="text" name="price" value={newItem.price} onChange={handleInputChange} />
-
-        
-
+        <button type="submit">Add Item</button>
     </form>)}
+    <h2>Items List </h2>
+    <ul>
+      {items.map((item) =>
+        <li key={item.id}>
+          {item.name}{item.price}
+          <button onClick={()=>editItem(item)}>Edit</button>
+          <button onClick={()=>deleteItems(item.id)}>Delete</button>
+        </li>
+        
+  )}
+
+    </ul>
   </div>)
 
 }
